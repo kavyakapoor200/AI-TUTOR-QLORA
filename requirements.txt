@@ -1,0 +1,7 @@
+torch
+transformers==4.36.2
+peft==0.7.1
+accelerate
+gradio
+sentencepiece
+protobuf==3.20.3
