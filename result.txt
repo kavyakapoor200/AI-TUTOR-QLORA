@@ -1,0 +1,114 @@
+Code:
+%%bash
+./bin/micromamba run -n qlora python - << 'EOF'
+import sys
+print("Python version:", sys.version)
+
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from peft import PeftModel
+
+print("🚀 Loading fine-tuned model")
+
+base_model = "mistralai/Mistral-7B-v0.1"
+lora_path = "ai_tutor_mistral/checkpoint-200"
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_use_double_quant=True,
+)
+
+tokenizer = AutoTokenizer.from_pretrained(base_model, use_fast=False)
+tokenizer.pad_token = tokenizer.eos_token
+
+model = AutoModelForCausalLM.from_pretrained(
+    base_model,
+    quantization_config=bnb_config,
+    device_map="auto",
+)
+
+model = PeftModel.from_pretrained(model, lora_path)
+model.eval()
+
+prompt = "Explain Bayes theorem in very simple words with an example."
+
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+with torch.no_grad():
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=200,
+        temperature=0.7,
+        top_p=0.9,
+        do_sample=True,
+    )
+
+print("\n🧠 Model Output:\n")
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+EOF
+Output: 
+Python version: 3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:29:10) [GCC 14.3.0]
+🚀 Loading fine-tuned model
+
+🧠 Model Output:
+
+Explain Bayes theorem in very simple words with an example.
+
+Answer :
+
+Bayes theorem is a mathematical formula that allows us to update our beliefs about an event or hypothesis based on new evidence. It is named after the 18th-century English mathematician Thomas Bayes.
+
+Let's say we have a coin that may be biased, meaning it may not have a 50% chance of landing on heads or tails. We want to know the probability that the coin is biased, given that we have flipped it 10 times and it landed on heads 7 times.
+
+First, we need to calculate the probability of each outcome (landing on heads or tails) under the assumption that the coin is not biased. This is known as the prior probability. In this case, the probability of landing on heads is 50% and the probability of landing on tails is also 50%.
+
+Next, we need to calculate the likelihood of
+warning  libmamba 'root_prefix' set with default value: /root/micromamba
+/root/micromamba/envs/qlora/lib/python3.10/site-packages/transformers/utils/generic.py:441: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+/root/micromamba/envs/qlora/lib/python3.10/site-packages/transformers/utils/generic.py:309: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+/root/micromamba/envs/qlora/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Loading checkpoint shards: 100%|██████████| 2/2 [01:15<00:00, 37.87s/it]
+/root/micromamba/envs/qlora/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Setting `pad_token_id` to `eos_token_id`:2 for open-end generation.
+Output via mistral 7b(base model):
+**Bayes’ Theorem in Simple Words:**
+
+Imagine you have a **belief** about something (like "It might rain today"). Then, you get **new information** (like "The sky is cloudy"). Bayes’ Theorem helps you **update your belief** based on that new information.
+
+---
+
+### **Example: The Cookie Jar**
+Let’s say you have two jars of cookies:
+
+- **Jar A**: 70% chocolate chip, 30% oatmeal.
+- **Jar B**: 30% chocolate chip, 70% oatmeal.
+
+You randomly pick a jar and pull out a chocolate chip cookie. **What’s the chance you picked from Jar A?**
+
+#### **Step-by-Step:**
+1. **Initial Belief (Prior):**
+   - You had a 50% chance of picking either jar.
+
+2. **New Information (Likelihood):**
+   - If you picked from **Jar A**, there’s a 70% chance of getting a chocolate chip cookie.
+   - If you picked from **Jar B**, there’s only a 30% chance.
+
+3. **Update Your Belief (Posterior):**
+   Bayes’ Theorem combines these to say:
+   - **There’s a 72% chance you picked from Jar A** (because it’s more likely to give you a chocolate chip cookie).
+
+---
+
+### **Why It Matters:**
+Bayes’ Theorem is how we **learn from experience**. It’s used in:
+- Spam filters (updating if an email is spam based on words).
+- Medical tests (updating the chance of a disease after a positive test).
+- Even how your brain guesses what you’ll do next!
+
+**In short:** It’s a math tool for **updating your guesses** when you get new clues.
