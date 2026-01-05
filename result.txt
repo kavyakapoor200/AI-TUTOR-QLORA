@@ -1,4 +1,4 @@
-Code:
+Code: 
 %%bash
 ./bin/micromamba run -n qlora python - << 'EOF'
 import sys
@@ -49,7 +49,6 @@ print("\n🧠 Model Output:\n")
 print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 EOF
 Output: 
-Python version: 3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:29:10) [GCC 14.3.0]
 🚀 Loading fine-tuned model
 
 🧠 Model Output:
@@ -64,19 +63,9 @@ Let's say we have a coin that may be biased, meaning it may not have a 50% chanc
 
 First, we need to calculate the probability of each outcome (landing on heads or tails) under the assumption that the coin is not biased. This is known as the prior probability. In this case, the probability of landing on heads is 50% and the probability of landing on tails is also 50%.
 
-Next, we need to calculate the likelihood of
-warning  libmamba 'root_prefix' set with default value: /root/micromamba
-/root/micromamba/envs/qlora/lib/python3.10/site-packages/transformers/utils/generic.py:441: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
-  _torch_pytree._register_pytree_node(
-/root/micromamba/envs/qlora/lib/python3.10/site-packages/transformers/utils/generic.py:309: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
-  _torch_pytree._register_pytree_node(
-/root/micromamba/envs/qlora/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
-  warnings.warn(
-Loading checkpoint shards: 100%|██████████| 2/2 [01:15<00:00, 37.87s/it]
-/root/micromamba/envs/qlora/lib/python3.10/site-packages/huggingface_hub/file_download.py:942: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
-  warnings.warn(
-Setting `pad_token_id` to `eos_token_id`:2 for open-end generation.
-Output via mistral 7b(base model):
+Next, we need to calculate the likelihood of [output truncated for brevity]
+ 
+Base Mistral 7B output:
 **Bayes’ Theorem in Simple Words:**
 
 Imagine you have a **belief** about something (like "It might rain today"). Then, you get **new information** (like "The sky is cloudy"). Bayes’ Theorem helps you **update your belief** based on that new information.
